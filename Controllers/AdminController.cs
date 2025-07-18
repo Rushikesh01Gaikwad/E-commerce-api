@@ -2,6 +2,7 @@
 using e_commerce_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using e_commerce_api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_api.Controllers
 {
@@ -36,6 +37,118 @@ namespace e_commerce_api.Controllers
                     return Ok(rtn);
                }
 
+            }
+            catch (Exception ex)
+            {
+                rtn.Message = ex.Message;
+                rtn.StatusCode = 0;
+                return Ok(rtn);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var rtn = new ReturnCd();
+            try
+            {
+                var admins = await _context.Admins.ToListAsync();
+                if (admins == null || !admins.Any())
+                {
+                    rtn.Message = "No data found.";
+                    rtn.StatusCode = 0;
+                    return Ok(rtn);
+                }
+                rtn.data = admins;
+                return Ok(rtn);
+            }
+            catch (Exception ex)
+            {
+                rtn.Message = ex.Message;
+                rtn.StatusCode = 0;
+                return Ok(rtn);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var rtn = new ReturnCd();
+            try
+            {
+                var admin = await _context.Admins.FindAsync(id);
+                if (admin == null)
+                {
+                    rtn.Message = "Admin not found.";
+                    rtn.StatusCode = 0;
+                    return Ok(rtn);
+                }
+                rtn.data = admin;
+                return Ok(rtn);
+            }
+            catch (Exception ex)
+            {
+                rtn.Message = ex.Message;
+                rtn.StatusCode = 0;
+                return Ok(rtn);
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Admin admin)
+        {
+            var rtn = new ReturnCd();
+            try
+            {
+                if (admin == null || id != admin.Id)
+                {
+                    rtn.Message = "Invalid input data.";
+                    rtn.StatusCode = 0;
+                    return Ok(rtn);
+                }
+                var existingAdmin = await _context.Admins.FindAsync(id);
+                if (existingAdmin == null)
+                {
+                    rtn.Message = "Admin not found.";
+                    rtn.StatusCode = 0;
+                    return Ok(rtn);
+                }
+                //existingAdmin.Title = admin.Title;
+                //existingAdmin.Price = admin.Price;
+                //existingAdmin.Description = admin.Description;
+                //existingAdmin.Category = admin.Category;
+                //existingAdmin.Image = admin.Image;
+                //existingAdmin.Rating = admin.Rating;
+                //_context.Admins.Update(existingAdmin);
+                _context.Entry(existingAdmin).CurrentValues.SetValues(admin);
+                await _context.SaveChangesAsync();
+                rtn.data = existingAdmin;
+                return Ok(rtn);
+            }
+            catch (Exception ex)
+            {
+                rtn.Message = ex.Message;
+                rtn.StatusCode = 0;
+                return Ok(rtn);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var rtn = new ReturnCd();
+            try
+            {
+                var admin = await _context.Admins.FindAsync(id);
+                if (admin == null)
+                {
+                    rtn.Message = "Admin not found.";
+                    rtn.StatusCode = 0;
+                    return Ok(rtn);
+                }
+                _context.Admins.Remove(admin);
+                await _context.SaveChangesAsync();
+                rtn.data = admin;
+                return Ok(rtn);
             }
             catch (Exception ex)
             {
