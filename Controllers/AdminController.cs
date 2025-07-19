@@ -11,6 +11,7 @@ namespace e_commerce_api.Controllers
     public class AdminController : ControllerBase
     {
      public readonly EcommerceContext _context;
+     private ReturnCd rtn = new ReturnCd();
 
         public AdminController(EcommerceContext context)
         {
@@ -20,7 +21,6 @@ namespace e_commerce_api.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] Admin admin)
         {
-            var rtn = new ReturnCd();
             try
             {
                 if (admin == null)
@@ -49,7 +49,6 @@ namespace e_commerce_api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var rtn = new ReturnCd();
             try
             {
                 var admins = await _context.Admins.ToListAsync();
@@ -73,7 +72,6 @@ namespace e_commerce_api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var rtn = new ReturnCd();
             try
             {
                 var admin = await _context.Admins.FindAsync(id);
@@ -96,7 +94,6 @@ namespace e_commerce_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Admin admin)
         {
-            var rtn = new ReturnCd();
             try
             {
                 if (admin == null || id != admin.Id)
@@ -135,7 +132,6 @@ namespace e_commerce_api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var rtn = new ReturnCd();
             try
             {
                 var admin = await _context.Admins.FindAsync(id);
