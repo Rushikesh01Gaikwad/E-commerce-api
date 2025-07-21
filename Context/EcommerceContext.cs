@@ -13,5 +13,10 @@ namespace e_commerce_api.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Orders> Orders { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+        }
+
     }
 }

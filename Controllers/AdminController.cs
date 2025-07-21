@@ -109,13 +109,6 @@ namespace e_commerce_api.Controllers
                     rtn.StatusCode = 0;
                     return Ok(rtn);
                 }
-                //existingAdmin.Title = admin.Title;
-                //existingAdmin.Price = admin.Price;
-                //existingAdmin.Description = admin.Description;
-                //existingAdmin.Category = admin.Category;
-                //existingAdmin.Image = admin.Image;
-                //existingAdmin.Rating = admin.Rating;
-                //_context.Admins.Update(existingAdmin);
                 _context.Entry(existingAdmin).CurrentValues.SetValues(admin);
                 await _context.SaveChangesAsync();
                 rtn.data = existingAdmin;
