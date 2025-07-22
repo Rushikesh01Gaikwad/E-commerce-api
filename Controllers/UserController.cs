@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using e_commerce_api.Models;
 using e_commerce_api.Context;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto;
 
 namespace e_commerce_api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private ReturnCd rtn = new ReturnCd();
@@ -27,6 +30,7 @@ namespace e_commerce_api.Controllers
                 }
                 else
                 {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                     rtn.data = user;
@@ -95,7 +99,8 @@ namespace e_commerce_api.Controllers
         {
             try
             {
-                if (user == null || id != user.Id)
+                var existing = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+                if (user == null)
                 {
                     rtn.Message = "Invalid input data.";
                     rtn.StatusCode = 0;
@@ -103,6 +108,19 @@ namespace e_commerce_api.Controllers
                 }
                 else
                 {
+                    if (user.Password != null)
+                    {
+                        bool isSamePassword = BCrypt.Net.BCrypt.Verify(user.Password, existing.Password);
+
+                        if (!isSamePassword)
+                        {
+                            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                        }
+                        else
+                        {
+                            user.Password = existing.Password;
+                        }
+                    }
                     _context.Users.Update(user);
                     _context.SaveChanges();
                     rtn.data = user;

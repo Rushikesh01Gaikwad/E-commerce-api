@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class OrderController : ControllerBase
     {
         private ReturnCd rtn = new ReturnCd();

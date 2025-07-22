@@ -15,7 +15,13 @@ namespace e_commerce_api.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.ToTable("Users");
+                entity.HasMany(e =>e.Orders).WithOne(e =>e.User).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
 
+            });
         }
 
     }

@@ -10,7 +10,7 @@
         public string City { get; set; }
         public string State { get; set; }
         public int Pin { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public ICollection<Orders>? Orders { get; set; } = new List<Orders>();
     }
 }
