@@ -99,7 +99,7 @@ namespace e_commerce_api.Controllers
         {
             try
             {
-                var existing = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+                var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
                 if (user == null)
                 {
                     rtn.Message = "Invalid input data.";
@@ -121,7 +121,8 @@ namespace e_commerce_api.Controllers
                             user.Password = existing.Password;
                         }
                     }
-                    _context.Users.Update(user);
+                    _context.Entry(existing).Property(e => e.Id).IsModified = false;
+                    _context.Entry(existing).CurrentValues.SetValues(user);
                     _context.SaveChanges();
                     rtn.data = user;
                     return Ok(rtn);
