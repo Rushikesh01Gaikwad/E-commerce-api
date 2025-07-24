@@ -121,7 +121,6 @@ namespace e_commerce_api.Controllers
                             user.Password = existing.Password;
                         }
                     }
-                    _context.Entry(existing).Property(e => e.Id).IsModified = false;
                     _context.Entry(existing).CurrentValues.SetValues(user);
                     _context.SaveChanges();
                     rtn.data = user;

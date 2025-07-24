@@ -108,7 +108,8 @@ namespace e_commerce_api.Controllers
                     return Ok(rtn);
                 }
 
-                _context.Entry(order).State = EntityState.Modified;
+                //_context.Entry(order).State = EntityState.Modified;
+                _context.Entry(existingOrder).CurrentValues.SetValues(order);
                 await _context.SaveChangesAsync();
                 rtn.data = existingOrder;
                 return Ok(rtn);
